@@ -6,14 +6,23 @@ const runScraper = async (sub) => {
   await page.goto(`https://old.reddit.com/r/${sub || 'stocks'}/comments/`);
 
   // Get the "viewport" of the page, as reported by the page.
-  const divs = await page.$$eval('div.md', divs => {
-    const innerText = divs?.map((div, index) => {
-      return div.innerText || null
+  const data = await page.$$eval('div.comment', divArr => {
+    const divs = divArr.map(div => {
+        const author = div.querySelector('p.tagline > a.author').innerText;
+        const body = div.querySelector('div.md').innerText;
+        const time = div.querySelector('time.live-timestamp').getAttribute('datetime');
+        const fullThread = div.querySelector('a.bylink').getAttribute('href');
+        const scoreHidden = div.querySelector('span.score-hidden').title;
+        const dislikes = div.querySelector('span.dislikes');
+        const likes = div.querySelector('span.likes');
+        const score = div.querySelector('span.score.unvoted');
+    
+        return { author, body, time, fullThread, scoreHidden, dislikes, likes, score };
     })
-    return innerText
+    return divs;
   })
   await browser.close()
-  return divs
+  return data
 };
 
-runScraper().then(data => console.log(data))
+runScraper().then(data => console.log(data));

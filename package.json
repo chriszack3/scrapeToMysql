@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "moment": "^2.29.4",
     "mysql": "^2.18.1",
     "puppeteer": "^19.2.2"
   }

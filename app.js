@@ -1,5 +1,9 @@
 const puppeteer = require('puppeteer');
 
+const getFirstOfMonth = () => {
+    
+}
+
 const runScraper = async (sub) => {
   const browser = await puppeteer.launch({ args: ['--no-sandbox'] })
   const page = await browser.newPage()

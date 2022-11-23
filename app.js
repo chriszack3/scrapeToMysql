@@ -16,8 +16,9 @@ const runScraper = async (sub) => {
         const dislikes = div.querySelector('span.dislikes');
         const likes = div.querySelector('span.likes');
         const score = div.querySelector('span.score.unvoted');
-    
-        return { author, body, time, fullThread, scoreHidden, dislikes, likes, score };
+        const commentId = div.getAttribute('data-fullname');
+
+        return { author, body, time, fullThread, scoreHidden, dislikes, likes, score, commentId };
     })
     return divs;
   })

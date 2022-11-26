@@ -3,13 +3,15 @@ const puppeteer = require('puppeteer');
 const runScraper = async (sub) => {
   const browser = await puppeteer.launch({ args: ['--no-sandbox'] })
 
-  let comments = []
-  while (comments.length < 49) {
+  let pageArr = []
+  let nextPage
+  for (i = pageArr.length; i < 3; i++) {
     const page = await browser.newPage()
-    comments.length > 0 ? await page.goto(`https://old.reddit.com/r/${sub || 'stocks'}/comments/?count=${comments.length}&after=${comments?.[comments.length - 1]?.commentId}`) : await page.goto(`https://old.reddit.com/r/${sub || 'stocks'}/comments/`);
+    nextPage ? await page.goto(nextPage) : await page.goto(`https://old.reddit.com/r/${sub || 'stocks'}/comments/`)
     // Get the "viewport" of the page, as reported by the page.
+    const url = await page.$eval('span.nextprev > span.next-button > a', (el) => el)
+    nextPage = url.href
     const data = await page.$$eval('div.comment', (divArr) => {
-      
       return divArr.map((comment, index) => {
         const author = comment.querySelector('p.tagline > a.author').innerText;
         const body = comment.querySelector('div.md').innerText;
@@ -25,14 +27,13 @@ const runScraper = async (sub) => {
       })
     });
 
-
-    comments.push(data);
-    console.log(comments)
+    pageArr.push(data);
+    console.log(pageArr)
   }
 
 
   await browser.close()
-  return comments;
+  return pageArr;
 };
 
 runScraper()

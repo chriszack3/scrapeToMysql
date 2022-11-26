@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
     "moment": "^2.29.4",
     "mysql": "^2.18.1",
     "puppeteer": "^19.2.2"
